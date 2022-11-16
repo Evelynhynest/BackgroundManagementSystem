@@ -27,5 +27,27 @@ export const reqAddOrUpdateSpu = (spuInfo) => {
   }
 }
 
+// 删除 SPU
+// /admin/product/deleteSpu/{spuId} DELETE
+export const reqDeleteSpu = (spuId) => request({url: `/admin/product/deleteSpu/${spuId}`, method: 'DELETE'});
 
+// skuForm =====================================================
+// 获取图片的数据
+// GET /admin/product/spuImageList/{spuId}
+// export const reqSpuImageList = (spuId) => request({url: `/admin/product/spuImageList/${spuId}`, method: 'GET'});
+
+// 获取销售属性列表的数据
+// GET /admin/product/spuSaleAttrList/{spuId}
+export const reqSpuSaleAttrList = (spuId) => request({url: `/admin/product/spuSaleAttrList/${spuId}`, method: 'GET'});
+
+// 获取平台属性列表的数据
+export const reqAttrInfoList = (category1Id, category2Id, category3Id) => request({url: `/admin/product/attrInfoList/${category1Id}/${category2Id}/${category3Id}`, method: 'GET'});
+
+// 添加 SKU
+// POST /admin/product/saveSkuInfo
+export const reqAddSku = (skuInfo) => request({url: '/admin/product/saveSkuInfo', method: 'POST', data: skuInfo});
+
+// 获取 Sku 列表数据
+// /admin/product/findBySpuId/{spuId} GET
+export const reqSkuList = (skuId) => request({url: `/admin/product/findBySpuId/${spuId}`, method: 'GET'});
 

@@ -46,7 +46,7 @@
           ></el-table-column>
           <el-table-column label="属性名" prop="saleAttrName"></el-table-column>
           <el-table-column label="属性值名称列表">
-            <template v-slot="{row}">
+            <template v-slot="{row, $index}">
               <el-tag
                 :key="tag.id"
                 v-for="(tag, index) in row.spuSaleAttrValueList"
@@ -60,7 +60,7 @@
                 class="input-new-tag"
                 v-if="row.inputVisible"
                 v-model="row.inputValue"
-                ref="saveTagInput"
+                :ref="$index"
                 size="small"
                 @keyup.enter.native="handleInputConfirm(row)"
                 @blur="handleInputConfirm(row)"
@@ -69,7 +69,7 @@
               -->
               </el-input>
                <!-- @click="showInput" -->
-              <el-button v-else class="button-new-tag" size="small" @click="addSaleAttrValue(row)">添加</el-button>
+              <el-button v-else class="button-new-tag" size="small" @click="addSaleAttrValue(row, $index)">添加</el-button>
             </template>
           </el-table-column>
           <el-table-column label="操作">
@@ -214,28 +214,31 @@ export default {
       this.attrIdAndAttrName = '';
     },
     // 点击添加属性值按钮的回调
-    addSaleAttrValue(row) {
+    addSaleAttrValue(row, index) {
       // 点击添加按钮时，需要从 button 变为 input，
       // 通过销售属性的 inputVisible 控制
       // 挂载在销售属性身上的响应式数据 inputVisible 控制着 button 与 input 的切换
       this.$set(row, 'inputVisible', true);
       // 通过响应式数据 inputValue 收集新增的销售属性值
       this.$set(row, 'inputValue', '');
+      this.$nextTick(() => {
+        this.$refs[index].focus();
+      })
     },
     // el-input 失去焦点的事件
     handleInputConfirm(row) {
       // 解构出销售属性中收集的数据
-      const {baseSaveAttrId, inputValue} = row;
+      const {baseSaleAttrId, inputValue} = row;
       // （一些输入合法性判断）新增的销售属性值的名称不能为空
       if(inputValue.trim() === '') {
         this.$message('属性值不能为空');
         return;
       }
       // 属性值不能重复
-      let result = row.spuSaleAttrValueList.every(item => item.saleAttrValueName===inputValue);
+      let result = row.spuSaleAttrValueList.some(item => item.saleAttrValueName===inputValue);
       if(result) return;
       // 新增的销售属性值
-      let newSaleAttrValue = {baseSaveAttrId, saleAttrValueName: inputValue};
+      let newSaleAttrValue = {baseSaleAttrId, saleAttrValueName: inputValue};
       // 修改 inputVisible 字段，为 false，显示 button
       row.inputVisible = false;
       row.spuSaleAttrValueList.push(newSaleAttrValue);

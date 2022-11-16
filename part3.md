@@ -88,6 +88,7 @@ spuSaleAttrValueList
 （1）新增的销售属性值需要收集的字段：
 baseSaveAttrId
 saleAttrValueName
+（2）添加属性值 input 自动获取焦点
 
 13.删除销售属性与属性值的操作
 三级联动组件的 disable 判断
@@ -100,3 +101,5 @@ saleAttrValueName
 15.完成添加SPU的操作
 （1）点击添加SPU按钮的时候需要发送两个请求：获取品牌数据、全部销售属性的数据
 （2）清空上次输入的数据
+
+16.删除 SPU 的操作
