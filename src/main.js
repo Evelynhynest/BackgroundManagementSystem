@@ -40,7 +40,9 @@ import API from '@/api/product/index';
 Vue.prototype.$API = API;
 
 import CategorySelect from '@/components/CategorySelect';
+import HintButton from '@/components/HintButton';
 Vue.component(CategorySelect.name, CategorySelect);
+Vue.component(HintButton.name, HintButton);
 
 new Vue({
   el: '#app',
