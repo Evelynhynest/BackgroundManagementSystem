@@ -82,6 +82,7 @@
 </template>
 
 <script>
+  import { mapState } from 'vuex';
   import * as echarts from 'echarts';
   import dayjs from 'dayjs';
   export default {
@@ -115,7 +116,7 @@
         xAxis: [
           {
             type: 'category',
-            data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            data: [],
             axisTick: {
               alignWithLabel: true
             }
@@ -131,29 +132,46 @@
             name: 'Direct',
             type: 'bar',
             barWidth: '60%',
-            data: [180, 250, 200, 334, 390, 330, 220, 370, 290, 380, 400, 360],
+            data: [],
             // color: 'skyblue',
           }
         ]
-      })
+      });
     },
     computed: {
       // 标题计算属性
       title() {
         return this.activeName === 'sale' ? '销售额' : '访问量';
-      }
+      },
+      ...mapState({
+        listState: state => state.home.list,
+      }),
     },
     // 监听属性
     watch: {
       title() {
+        // console.log('修改图表配置的数据');
         // 标题发生变化，重新设置图表的配置数据
         // 图表的配置数据可以再次修改，如果有新的数值，就用新的，如果没有还是用旧的
         this.myCharts.setOption({
           title: {
             text: this.title + '趋势',
-          }
-        })
-      }
+          },
+          xAxis: {
+            data: this.title === '销售额' ? this.listState.orderFullYearAxis : this.listState.userFullYearAxis,
+          },
+          series: [
+            {
+              data: this.title === '销售额' ? this.listState.orderFullYear : this.listState.userFullYear,
+            }
+          ]
+        });
+      },
+      // 为什么一写监听 listState 就拿不到仓库数据，一直是 undefined？
+      // listState(value) {
+      //   this.listState = value;
+      //   console.log('listState changed');
+      // }
     },
     methods: {
       setToday() {

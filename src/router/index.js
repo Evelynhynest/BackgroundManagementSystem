@@ -30,6 +30,8 @@ import Layout from '@/layout'
  * a base page that does not have permission requirements
  * all roles can be accessed
  */
+// 需要把项目中的路由进行拆分
+// 常量路由：所有用户都能看见
 export const constantRoutes = [
   {
     path: '/login',
@@ -56,6 +58,13 @@ export const constantRoutes = [
     }]
   },
 
+  // 404 page must be placed at the end !!!
+  
+]
+
+// 异步路由：需要根据不同用户身份，通过过滤筛选出的路由
+// 需要跟服务器返回的 routes 数组进行对比，（所以异步路由是数组）
+export const asyncRoutes = [
   {
     path: '/product',
     component: Layout,
@@ -89,14 +98,85 @@ export const constantRoutes = [
     ]
   },
 
-  // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true }
-]
+  {
+    name: 'Acl',
+    path: '/acl',
+    component: Layout,
+    redirect: '/acl/user/list',
+    meta: {
+      title: '权限管理',
+      icon: 'el-icon-lock'
+    },
+    children: [
+      {
+        name: 'User',
+        path: 'user/list',
+        component: () => import('@/views/acl/user/list'),
+        meta: {
+          title: '用户管理',
+        },
+      },
+      {
+        name: 'Role',
+        path: 'role/list',
+        component: () => import('@/views/acl/role/list'),
+        meta: {
+          title: '角色管理',
+        },
+      },
+      {
+        name: 'RoleAuth',
+        path: 'role/auth/:id',
+        component: () => import('@/views/acl/role/roleAuth'),
+        meta: {
+          activeMenu: '/acl/role/list',
+          title: '角色授权',
+        },
+        hidden: true,
+      },
+      {
+        name: 'Permission',
+        path: 'permission/list',
+        component: () => import('@/views/acl/permission/list'),
+        meta: {
+          title: '菜单管理',
+        },
+      },
+    ]
+  },
+
+  {
+    path: '/test',
+    component: Layout,
+    name: 'Test',
+    meta: { title: '测试管理', icon: 'el-icon-goods' },
+    children: [
+      {
+        path: 'test1',
+        name: 'Test1',
+        component: () => import('@/views/Test/Test1'),
+        meta: { title: '测试管理1' },
+      },
+      {
+        path: 'test2',
+        name: 'Test2',
+        component: () => import('@/views/Test/Test2'),
+        meta: { title: '测试管理2' },
+      },
+    ]
+  },
+
+];
+
+// 任意路由：当路径出现错误的时候重定向到 404
+export const anyRoutes = { path: '*', redirect: '/404', hidden: true };
 
 const createRouter = () => new Router({
   // mode: 'history', // require service support
   scrollBehavior: () => ({ y: 0 }),
-  routes: constantRoutes
+  // 因为注册的路由是固定的，所以对所有用户都展示同样的菜单
+  // 需要根据不同用户展示不同的菜单
+  routes: constantRoutes,
 })
 
 const router = createRouter()

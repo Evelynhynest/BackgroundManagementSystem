@@ -26,12 +26,19 @@ import variables from '@/styles/variables.scss'
 
 export default {
   components: { SidebarItem, Logo },
+  mounted() {
+    // console.log('$route',this.$route);
+  },
   computed: {
     ...mapGetters([
       'sidebar'
     ]),
     routes() {
-      return this.$router.options.routes
+      // 模板原来遍历的都是常量路由
+      // return this.$router.options.routes
+      // slidebar 需要遍历的应该是仓库计算完的用户全部路由
+      return this.$store.state.user.resultAllRoutes;
+
     },
     activeMenu() {
       const route = this.$route

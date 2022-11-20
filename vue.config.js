@@ -37,8 +37,9 @@ module.exports = {
       warnings: false,
       errors: true
     },
-    // mock
-    // before: require('./mock/mock-server.js')
+    // mock（开启 mock 的数据）
+    // before: require('./mock/mock-server.js'),
+    after: require('./mock/mock-server.js'),
     // 使用真实数据，配置代码跨域
     proxy: {
       '/dev-api': {
